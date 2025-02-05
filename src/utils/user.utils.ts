@@ -1,13 +1,13 @@
 import { User } from '@prisma/client';
 
 type BLOCK_PROPERTIES = (typeof DEFAULT_BLOCK_PROPERTIES)[number];
-type OmitProps = undefined | (keyof User)[];
+type OmitProps = undefined | (keyof User)[] | BLOCK_PROPERTIES[];
 type OmitUser = Omit<User, BLOCK_PROPERTIES>;
 
 const DEFAULT_BLOCK_PROPERTIES = ['createdAt', 'hashPassword', 'updatedAt'] as const;
 
-export function omitUserSchema(data: User, omitProperties?: OmitProps): OmitUser {
-  const excludeKeys = !omitProperties ? DEFAULT_BLOCK_PROPERTIES : omitProperties;
+export function omitUserSchema(data: User, omitProps?: OmitProps): OmitUser {
+  const excludeKeys = !omitProps ? DEFAULT_BLOCK_PROPERTIES : omitProps;
   const objectKeys = Object.keys(data);
   const validKeys = objectKeys.filter((el) => !excludeKeys.includes(el as BLOCK_PROPERTIES));
 
