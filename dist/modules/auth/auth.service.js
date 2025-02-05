@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const hasher_1 = require("../../libs/hasher");
+const user_utils_1 = require("../../utils/user.utils");
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("../user/user.service");
 const jwt_service_1 = require("./jwt/jwt.service");
@@ -28,7 +29,7 @@ let AuthService = class AuthService {
         if (!isCorrectPassword) {
             throw new common_1.BadRequestException('Incorrect name/email or password!');
         }
-        const { hashPassword, updateAt, ...data } = userData;
+        const data = (0, user_utils_1.omitUserSchema)(userData);
         return await this.jwtService.generateToken(data);
     }
 };

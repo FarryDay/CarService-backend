@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
+const user_utils_1 = require("../../../utils/user.utils");
 const user_service_1 = require("../../user/user.service");
 const common_1 = require("@nestjs/common");
 const jwt_service_1 = require("../jwt/jwt.service");
@@ -30,9 +31,9 @@ let AuthGuard = class AuthGuard {
         }
         const userData = await this.userService.findById(data.id);
         const iatTS = data.iat * 1000;
-        const userUpdatedTS = userData.updateAt.valueOf();
+        const userUpdatedTS = userData.updatedAt.valueOf();
         if (userUpdatedTS > iatTS) {
-            const { hashPassword, updateAt, ...data } = userData;
+            const data = (0, user_utils_1.omitUserSchema)(userData);
             const newToken = await this.jwtService.generateToken(data);
             res.cookie('token', newToken);
         }

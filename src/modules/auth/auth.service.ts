@@ -1,4 +1,5 @@
 import Hasher from '@/libs/hasher';
+import { omitUserSchema } from '@/utils/user.utils';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import LoginDTO from './dto/login.dto';
@@ -22,7 +23,7 @@ export class AuthService {
       throw new BadRequestException('Incorrect name/email or password!');
     }
 
-    const { hashPassword, updatedAt, createdAt, ...data } = userData;
+    const data = omitUserSchema(userData);
 
     return await this.jwtService.generateToken(data);
   }

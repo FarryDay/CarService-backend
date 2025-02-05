@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
+const user_utils_1 = require("../../utils/user.utils");
 const user_service_1 = require("../user/user.service");
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
@@ -42,8 +43,8 @@ let AuthController = class AuthController {
         };
     }
     async me(req) {
-        const { hashPassword, updateAt, ...data } = req.user;
-        return data;
+        const userData = (0, user_utils_1.omitUserSchema)(req.user);
+        return userData;
     }
 };
 exports.AuthController = AuthController;

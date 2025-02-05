@@ -1,3 +1,4 @@
+import { omitUserSchema } from '@/utils/user.utils';
 import { UserService } from '@modules/user/user.service';
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
@@ -25,9 +26,9 @@ export class AuthGuard implements CanActivate {
     const userData = await this.userService.findById(data.id);
 
     const iatTS = data.iat * 1000;
-    const userUpdatedTS = userData.updateAt.valueOf();
+    const userUpdatedTS = userData.updatedAt.valueOf();
     if (userUpdatedTS > iatTS) {
-      const { hashPassword, updateAt, ...data } = userData;
+      const data = omitUserSchema(userData);
       const newToken = await this.jwtService.generateToken(data);
       res.cookie('token', newToken);
     }

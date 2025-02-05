@@ -1,3 +1,4 @@
+import { omitUserSchema } from '@/utils/user.utils';
 import { UserService } from '@modules/user/user.service';
 import { Body, Controller, Get, Post, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
@@ -40,7 +41,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('/me')
   async me(@Req() req: any) {
-    const { hashPassword, updatedAt, createdAt, ...data } = req.user;
-    return data;
+    const userData = omitUserSchema(req.user);
+    return userData;
   }
 }

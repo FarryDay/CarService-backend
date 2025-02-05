@@ -15,5 +15,9 @@ export declare class AuthController {
     registration(res: Response, registrationDto: RegistrationDTO): Promise<{
         message: string;
     }>;
-    me(req: any): Promise<any>;
+    me(req: any): Promise<{
+        id: number;
+        username: string;
+        email: string;
+    }>;
 }
