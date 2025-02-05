@@ -40,7 +40,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('/me')
   async me(@Req() req: any) {
-    const { hashPassword, updateAt, ...data } = req.user;
+    const { hashPassword, updatedAt, createdAt, ...data } = req.user;
     return data;
   }
 }

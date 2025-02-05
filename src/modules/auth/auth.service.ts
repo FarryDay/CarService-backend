@@ -22,7 +22,7 @@ export class AuthService {
       throw new BadRequestException('Incorrect name/email or password!');
     }
 
-    const { hashPassword, updateAt, ...data } = userData;
+    const { hashPassword, updatedAt, createdAt, ...data } = userData;
 
     return await this.jwtService.generateToken(data);
   }
