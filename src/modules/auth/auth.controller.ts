@@ -1,4 +1,4 @@
-import { omitUserSchema } from '@/utils/user.utils';
+import { DEFAULT_USER_REMOVE_PROPERTIES, omitUserSchema } from '@/utils/user.utils';
 import { UserService } from '@modules/user/user.service';
 import { Body, Controller, Get, Post, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
@@ -41,7 +41,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('/me')
   async me(@Req() req: any) {
-    const userData = omitUserSchema(req.user);
+    const userData = omitUserSchema(req.user, ...DEFAULT_USER_REMOVE_PROPERTIES);
     return userData;
   }
 }
