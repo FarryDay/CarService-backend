@@ -2,18 +2,22 @@ import Hasher from '@/libs/hasher';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import { EmailService } from '../email/email.service';
 import { CreateDTO } from './dto/create.input';
 import { UserCreateOptions, UserFindByIdOptions } from './types';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+  ) {}
 
   async create(data: CreateDTO, options?: UserCreateOptions): Promise<User> {
     const { password, ...props } = data;
     const hashPassword = await Hasher.hash(password);
 
-    let user = await this.prisma.user
+    const user = await this.prisma.user
       .create({
         data: {
           ...props,
@@ -25,15 +29,7 @@ export class UserService {
       });
 
     if (options?.emailConfirm) {
-      await this.prisma.emailConfirm.create({
-        data: {
-          user: {
-            connect: {
-              id: user.id,
-            },
-          },
-        },
-      });
+      await this.emailService.createEmailConfirm(user.id);
     }
 
     return user;

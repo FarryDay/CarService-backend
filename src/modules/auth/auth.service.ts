@@ -40,8 +40,6 @@ export class AuthService {
     });
 
     const data = UserUtils.omit(userData, ...UserUtils.DEFAULT_PROPERTIES);
-    const token = await this.jwtService.generateToken(data);
-
-    return token;
+    return this.jwtService.generateToken(data);
   }
 }

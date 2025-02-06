@@ -1,21 +1,15 @@
 import UserUtils from '@/utils/user.utils';
-import { UserService } from '@modules/user/user.service';
 import { Body, Controller, Get, Post, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import LoginDTO from './dto/login.dto';
 import RegistrationDTO from './dto/registration.dto';
 import { AuthGuard } from './guards/auth.guard';
-import { JwtService } from './jwt/jwt.service';
 
 @Controller('auth')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
   async login(@Res({ passthrough: true }) res: Response, @Body() loginDto: LoginDTO) {
@@ -35,9 +29,6 @@ export class AuthController {
       message: `Success registration!`,
     };
   }
-
-  @Get('/email-confirm/:id')
-  async emailConfirm() {}
 
   @UseGuards(AuthGuard)
   @Get('/me')
