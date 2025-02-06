@@ -6,8 +6,11 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  // @UseGuards(AuthGuard)
   @Query(() => User)
   async get() {
-    return null;
+    //@Context() context: any
+    // const user = context.req.user;
+    return { exampleField: 10 };
   }
 }

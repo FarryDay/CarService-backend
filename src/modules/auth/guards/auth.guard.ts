@@ -1,7 +1,7 @@
-import { omitUserSchema } from '@/utils/user.utils';
+import GuardsUtils from '@/utils/guards.utils';
+import UserUtils from '@/utils/user.utils';
 import { UserService } from '@modules/user/user.service';
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Response } from 'express';
 import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
@@ -12,9 +12,9 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const httpContext = context.switchToHttp();
-    const req = httpContext.getRequest();
-    const res = httpContext.getResponse() as Response;
+    const req = GuardsUtils.getRequest(context);
+    const res = GuardsUtils.getResponse(context);
+
     const token = req.cookies.token || '';
 
     const data = await this.jwtService.verify(token);
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
     const iatTS = data.iat * 1000;
     const userUpdatedTS = userData.updatedAt.valueOf();
     if (userUpdatedTS > iatTS) {
-      const data = omitUserSchema(userData);
+      const data = UserUtils.omit(userData, ...UserUtils.DEFAULT_PROPERTIES);
       const newToken = await this.jwtService.generateToken(data);
       res.cookie('token', newToken);
     }

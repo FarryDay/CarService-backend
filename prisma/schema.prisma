@@ -7,13 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
+enum Role {
+  Administrator
+  Premium
+  User
+}
 
-  username     String @unique
+model User {
+  id Int @id @unique @default(autoincrement())
+
   email        String @unique
+  username     String @unique
   hashPassword String @map("hash_password")
+  role         Role   @default(User)
 
   updatedAt DateTime @updatedAt @map("updated_at")
   createdAt DateTime @default(now())
+
+  emailConfirm EmailConfirm?
+}
+
+model EmailConfirm {
+  id String @id @default(uuid())
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
 }

@@ -1,13 +1,15 @@
 import { UserModule } from '@modules/user/user.module';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { EmailModule } from '../email/email.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtService } from './jwt/jwt.service';
 
+@Global()
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, EmailModule],
   controllers: [AuthController],
   providers: [AuthService, JwtService],
-  exports: [AuthService], //TODO: add UserModule for test import into other modules
+  exports: [AuthService, JwtService, UserModule], //TODO: add UserModule for test import into other modules
 })
 export class AuthModule {}

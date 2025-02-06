@@ -1,8 +1,17 @@
 version: '3.9'
 
 services:
+  cassandra:
+    image: cassandra:latest
+    ports:
+      - 9042:9042
+    volumes:
+      - /var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=CarService
   postgres:
     image: postgres:latest
+    restart: always
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 12341234

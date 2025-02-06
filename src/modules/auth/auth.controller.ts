@@ -1,4 +1,4 @@
-import { DEFAULT_USER_REMOVE_PROPERTIES, omitUserSchema } from '@/utils/user.utils';
+import UserUtils from '@/utils/user.utils';
 import { UserService } from '@modules/user/user.service';
 import { Body, Controller, Get, Post, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
@@ -29,19 +29,20 @@ export class AuthController {
 
   @Post('/registration')
   async registration(@Res({ passthrough: true }) res: Response, @Body() registrationDto: RegistrationDTO) {
-    const data = await this.userService.create(registrationDto);
-    const token = await this.jwtService.generateToken(data);
-
+    const token = await this.authService.registration(registrationDto);
     res.cookie('token', token);
     return {
       message: `Success registration!`,
     };
   }
 
+  @Get('/email-confirm/:id')
+  async emailConfirm() {}
+
   @UseGuards(AuthGuard)
   @Get('/me')
   async me(@Req() req: any) {
-    const userData = omitUserSchema(req.user, ...DEFAULT_USER_REMOVE_PROPERTIES);
+    const userData = UserUtils.omit(req.user, ...UserUtils.DEFAULT_PROPERTIES);
     return userData;
   }
 }
